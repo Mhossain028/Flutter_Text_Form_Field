@@ -31,6 +31,8 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late String value;
+  TextEditingController emailcontroller = TextEditingController();
+  TextEditingController passcontroller = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -52,6 +54,7 @@ class _HomeState extends State<Home> {
                   SizedBox(
                     width: size.width * 0.45,
                     child: TextFormField(
+                      controller: emailcontroller,
                       decoration: const InputDecoration(
                         hintText: "Enter Email",
                         labelText: "Email",
@@ -75,6 +78,7 @@ class _HomeState extends State<Home> {
                   SizedBox(
                     width: size.width * 0.45,
                     child: TextFormField(
+                      controller: passcontroller,
                       decoration: const InputDecoration(
                         hintText: "Enter Password",
                         labelText: "Password",
@@ -82,7 +86,8 @@ class _HomeState extends State<Home> {
                       ),
                       validator: (value) {
                         if (value!.isEmpty ||
-                            !RegExp(r'^[0-9]').hasMatch(value)) {
+                            !RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
+                                .hasMatch(value)) {
                           return 'Your Password Must Contain Capital Letter and Number';
                         } else {
                           return null;
@@ -102,13 +107,16 @@ class _HomeState extends State<Home> {
           RaisedButton(
             onPressed: () {
               if (_formKey.currentState!.validate()) {
-                Scaffold.of(context).showSnackBar(
+                setState(() {});
+                ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Form Submitted')),
                 );
               }
             },
             child: const Text('Submit'),
           ),
+          Text("Email: ${emailcontroller.text}"),
+          Text("Password: ${passcontroller.text}"),
         ],
       ),
     );
